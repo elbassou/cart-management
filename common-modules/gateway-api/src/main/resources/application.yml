@@ -1,0 +1,52 @@
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: product-service
+          uri: 'http://localhost:8081'
+          predicates:
+            - Path=/products/**
+          filters:
+            - RewritePath=/products/(?<path>.*), /${path}
+
+        - id: order-service
+          uri: 'http://localhost:8084'
+          predicates:
+            - Path=/api/orders/**
+          filters:
+            - RewritePath=/api/orders/(?<path>.*), /${path}
+
+        - id: cart-service
+          uri: 'http://localhost:8082'
+          predicates:
+            - Path=/api/cart/**
+          filters:
+            - RewritePath=/api/cart/(?<path>.*), /${path}
+
+        - id: inventory-service
+          uri: 'http://localhost:8083'
+          predicates:
+            - Path=/api/inventory/**
+          filters:
+            - RewritePath=/api/inventory/(?<path>.*), /${path}
+
+        - id: client-service
+          uri: 'http://localhost:8080'
+          predicates:
+            - Path=/api/clients/**
+          filters:
+            - RewritePath=/api/clients/(?<path>.*), /${path}
+
+    config:
+      enabled: false
+
+server:
+  port: 8888
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    config-url: /v3/api-docs

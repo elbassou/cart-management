@@ -18,13 +18,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
 
-   private  ObjectMapper objectMapper;
+
     private CommandeRepository orderRepository;
     private OrderLineRepository orderLineRepository;
     private InventoryClient inventoryClient;
@@ -32,12 +33,12 @@ public class OrderService {
 
     @Lazy
     public OrderService(CommandeRepository orderRepository,OrderLineRepository orderLineRepository,
-        InventoryClient inventoryClient,@Autowired CartClient cartClient, ObjectMapper objectMapper){
+        InventoryClient inventoryClient,@Autowired CartClient cartClient){
     this.orderRepository = orderRepository;
     this.orderLineRepository = orderLineRepository;
     this.inventoryClient = inventoryClient;
     this.cartClient = cartClient;
-    this.objectMapper = objectMapper;
+
 
     }
 
@@ -74,19 +75,40 @@ public class OrderService {
                 }).collect(Collectors.toList());
 
         // Sauvegarder les lignes de commande et collecter leurs IDs
-        List<Long> orderLineIds = orderLineRepository.saveAll(orderLines).stream()
+
+        List<OrderLine> savedOrderlines = orderLineRepository.saveAll(orderLines);
+
+        savedOrderlines.stream().forEach(orderLine ->
+        {
+            System.out.println(orderLine.getCommandeId());
+            System.out.println("Quantity"+orderLine.getQuantity());
+            System.out.println("Price"+orderLine.getPrice());
+            System.out.println("product id "+orderLine.getProduitId());
+
+        });
+
+
+
+        List<Long> orderLineIds = savedOrderlines.stream()
                 .map(OrderLine::getId)
                 .collect(Collectors.toList());
 
         // Mettre à jour la commande avec les IDs des lignes de commande
         savedOrder.setOrderLineIds(orderLineIds);
-        orderRepository.save(savedOrder);
+        Commande obj = orderRepository.save(savedOrder);
+
+
 
         // Ajuster le stock après la confirmation de la commande
         for (CartItemResponse item : cart.getItems()) {
             if(item.getProductId()!=null) {
                 UpdateInventoryRequest updateInventoryRequest = new UpdateInventoryRequest(item.getProductId(), -item.getQuantity());
-                inventoryClient.updateInventory(updateInventoryRequest);  // Appel à InventoryService
+             try {
+                 inventoryClient.updateInventory(updateInventoryRequest);  // Appel à InventoryService
+             }catch (Exception e){
+                 e.printStackTrace();
+                 System.out.println(e.getMessage());
+             }
             }
 
         }
@@ -94,14 +116,16 @@ public class OrderService {
 
     public List<OrderResponse> getClientOrderHistory(Long clientId) {
         List<Commande> commandes = orderRepository.findByClientId(clientId); // Méthode pour récupérer les commandes
+
         return commandes.stream()
                 .map(commande -> new OrderResponse(
                         commande.getId(),
                         commande.getClientId(),
-                        commande.getCommandeDate(),
-                        OrderStatusDTO.valueOf(commande.getStatus().name()), // Convertir en OrderStatusDTO
-                        commande.getTotalPrice()))
-                .collect(Collectors.toList());
+                      LocalDateTime.now()  /*commande.getCommandeDate()*/,
+                        commande.getStatus().name()   /*OrderStatusDTO.valueOf(commande.getStatus().name())*/, // Convertir en OrderStatusDTO
+                        commande.getTotalPrice() != null ? commande.getTotalPrice() : BigDecimal.ZERO))
+              .collect(Collectors.toList());
+
     }
 
     public OrderDetailsResponse getOrderDetails(Long orderId) {
@@ -130,7 +154,13 @@ public class OrderService {
     // Mapper une ligne de commande à une réponse simplifiée
     private OrderLineResponse mapToOrderLineResponse(OrderLine orderLine) {
 
-        return  objectMapper.convertValue(orderLine, OrderLineResponse.class);
+        OrderLineResponse orderLineResponse = new OrderLineResponse();
+        orderLineResponse.setId(orderLine.getId());
+        orderLineResponse.setProduitId(orderLine.getProduitId());
+        orderLineResponse.setQuantity(orderLine.getQuantity());
+        orderLineResponse.setPrice(orderLine.getPrice());
+
+        return orderLineResponse;
 
     }
 

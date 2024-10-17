@@ -22,7 +22,7 @@ public class OrderLine {
     @Column(name = "commande_id", nullable = false)
     private Long commandeId; // Référence à la commande à laquelle cette ligne appartient
 
-    @Column(name = "produit_id", nullable = false)
+    @Column(name = "produit_id")
     private Long produitId; // Référence à l'ID du produit, pourrait être obtenu du Product Service
 
     private int quantity; // Quantité de produit commandée

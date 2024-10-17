@@ -14,7 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -46,8 +48,10 @@ public static final Logger logger = LoggerFactory.getLogger(OrderController.clas
 
         try {
             List<OrderResponse>  list = orderService.getClientOrderHistory(clientId);
-            return new ResponseEntity<>(list, HttpStatus.OK);
+
+            return new ResponseEntity<List<OrderResponse>>(list, HttpStatus.OK);
         } catch (Exception e) {
+
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }

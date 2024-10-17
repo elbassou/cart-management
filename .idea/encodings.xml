@@ -3,6 +3,7 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/common-modules/config-kafka/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/common-modules/config-redis/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/common-modules/gateway-api/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/common-modules/security-gateway/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/common-modules/shared-config/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/common-modules/shared-config/src/main/resources" charset="UTF-8" />

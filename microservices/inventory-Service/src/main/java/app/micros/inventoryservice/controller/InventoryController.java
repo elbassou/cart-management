@@ -4,6 +4,9 @@ import app.micros.inventoryservice.service.InventoryService;
 import app.micros.shared.request.UpdateInventoryRequest;
 import app.micros.shared.response.InventoryResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,7 +19,9 @@ public class InventoryController {
     // Endpoint pour récupérer l'inventaire par ID de produit
     @GetMapping("/{productId}")
     public InventoryResponse getInventoryByProductId(@PathVariable Long productId) {
+
         return inventoryService.getInventoryByProductId(productId);
+
     }
 
     // Endpoint pour mettre à jour l'inventaire

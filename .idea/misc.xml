@@ -14,6 +14,8 @@
         <option value="$PROJECT_DIR$/microservices/cart-service/pom.xml" />
         <option value="$PROJECT_DIR$/microservices/order-service/pom.xml" />
         <option value="$PROJECT_DIR$/microservices/inventory-Service/pom.xml" />
+        <option value="$PROJECT_DIR$/common-modules/gatewau-api/pom.xml" />
+        <option value="$PROJECT_DIR$/common-modules/gateway-api/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">

@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -72,7 +73,7 @@ public class CartService {
 
         // Vérifier le stock
         InventoryResponse inventory = inventoryClient.getInventoryByProductId(productId);
-        if (inventory.getQuantityInStock() < quantity) {
+        if (inventory!=null && inventory.getQuantityInStock() < quantity) {
             throw new CustomException("Stock insuffisant pour le produit : " + productId);
         }
 

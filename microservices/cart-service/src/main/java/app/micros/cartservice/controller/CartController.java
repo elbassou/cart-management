@@ -1,11 +1,8 @@
 package app.micros.cartservice.controller;
 
-import app.micros.cartservice.model.Cart;
 import app.micros.cartservice.service.CartService;
-
 import app.micros.shared.dto.ProductCartDTO;
 import app.micros.shared.response.CartResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,9 +22,7 @@ public class CartController {
     // Ajouter un produit au panier
     @PostMapping("/{customerId}/items")
     public ResponseEntity<String> addProductToCart(@PathVariable Long customerId,@RequestBody ProductCartDTO productCartDTO)
-                                                  {
-
-
+    {
         try {
             cartService.addToCart(customerId, productCartDTO.getProductId(), productCartDTO.getQuantity());
             return new ResponseEntity<>("Produit ajouté au panier avec succès.", HttpStatus.CREATED);

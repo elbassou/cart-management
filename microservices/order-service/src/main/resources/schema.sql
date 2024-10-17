@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS order_lines (
                              id BIGINT AUTO_INCREMENT PRIMARY KEY,
                              commande_id BIGINT NOT NULL,
                              produit_id BIGINT NOT NULL,
+                             order_line_id BIGINT ,
                              quantity INT,
                              price DECIMAL(10, 2)
 );

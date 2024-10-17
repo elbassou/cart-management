@@ -15,7 +15,7 @@ public class InventoryService {
 
     private InventaireRepository inventaireRepository;
 
-    public InventoryService (InventaireRepository inventaireRepository) {
+    public InventoryService (@Autowired InventaireRepository inventaireRepository) {
        this.inventaireRepository = inventaireRepository;
     }
 
@@ -36,6 +36,7 @@ public class InventoryService {
         if (inventaireOptional.isPresent()) {
             Inventaire inventaire = inventaireOptional.get();
             inventaire.setQuantityAvailable(inventaire.getQuantityAvailable() + request.getQuantityChange());
+            inventaire.setProduitId(request.getProductId());
             inventaireRepository.save(inventaire);
         } else {
             throw new RuntimeException("Produit non trouvé : " + request.getProductId());
