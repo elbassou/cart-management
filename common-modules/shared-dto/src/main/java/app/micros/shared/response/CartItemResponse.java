@@ -15,5 +15,10 @@ public class CartItemResponse {
     private int quantity; // Quantité commandée
     private BigDecimal price; // Prix de l'article
 
+    public CartItemResponse(Long id,int quantity){
+        this.id = id;
+        this.quantity = quantity;
+    }
+
 
 }
